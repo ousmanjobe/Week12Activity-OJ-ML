@@ -7,22 +7,20 @@
 import javascript
 
 /**
- * Holds if a function is a function.
+ * Holds if a function has a body.
  */
-predicate isFunction(Function func) {
-  exists(CallExpr function |
-    function.getCalleeName() = "function"
-  )
+predicate hasBody(Function func) {
+  exists(Block b | func.getABody(b))
 }
 
 /**
 * Holds if `function` contains more than 10 lines.
 */
 predicate moreThanTenLines(Function func) {
-  exists(func.getNumLines() >= 10)
+  exists(Block b | func.getABody(b) and b.getNumLines() > 10)
 }
 
 from Function func
-where isFunction(func) and
+where hasBody(func) and
       moreThanTenLines(func)
 select func, "is longer than 10 lines"
